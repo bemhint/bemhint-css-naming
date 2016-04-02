@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dima117/bemhint-css-naming/issues"
   },
-  "homepage": "https://github.com/dima117/bemhint-css-naming#readme"
+  "homepage": "https://github.com/dima117/bemhint-css-naming#readme",
+  "devDependencies": {
+    "postcss": "^5.0.19"
+  }
 }
