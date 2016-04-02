@@ -1,7 +1,9 @@
 var bemNaming = require('bem-naming'),
     postcss = require('postcss'),
     parser = require('postcss-selector-parser'),
-    util = require('util');
+    minimatch = require('minimatch'),
+    util = require('util'),
+    _ = require('lodash');
 
 module.exports = {
 
@@ -28,6 +30,12 @@ module.exports = {
             });
         }
 
+        function isExcluded(matchers, css) {
+            return _.some(matchers, function(matcher) {
+                return minimatch(css, matcher);
+            });
+        }
+
         data && data.nodes.forEach(function(rule) {
             rule.type === 'rule' && parser(function(selectors) {
 
@@ -36,19 +44,31 @@ module.exports = {
                         ruleStart = rule.source.start;
 
                     selector.eachClass(function (cssClass) {
-                        var cssEntity = bemNaming.parse(cssClass.value),
+                        var cssVal = cssClass.value,
+                            cssEntity = bemNaming.parse(cssVal),
                             cssClassStart = cssClass.source.start,
-                            line = ruleStart.line + cssClassStart.line - 1;
+                            errorLine = ruleStart.line + cssClassStart.line - 1,
+                            matchers = config._config.excludeClasses || [];
+
+                        // var m = matchers.map(function(val) {
+                        //         return '(' + minimatch.makeRe(val) + ')'
+                        //     }).join('|');
+                        //     console.log('-=-=-=', m);
+                        // var isMatched = new RegExp(m).test(cssVal);
+                        // console.log('----', cssVal, isMatched);
+                        if (isExcluded(matchers, cssVal)) {
+                            return;
+                        }
 
                         if (cssEntity) {
                             hasTargetBlock = hasTargetBlock || (cssEntity.block === tech.entity.block);
                         } else {
-                            addError('invalid class naming', rule.selector, line, cssClassStart.column);
+                            addError('Invalid class naming', rule.selector, errorLine, cssClassStart.column);
                         }
                     });
 
                     hasTargetBlock || addError(
-                        'selector does not contain block name specified in the file name',
+                        'Selector does not contain block name specified in the file name',
                         rule.selector,
                         ruleStart.line,
                         ruleStart.column
