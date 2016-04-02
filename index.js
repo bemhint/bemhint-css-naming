@@ -5,17 +5,21 @@ var bemNaming = require('bem-naming'),
 
 module.exports = {
     forEachTech: function(tech, entity, config) {
-        var data = postcss.parse(tech.content);
+        try {
+            var data = postcss.parse(tech.content);
+        } catch(e) {
+            addError('Failed to check css naming', e.reason, e.line, e.column);
+        }
 
-        function addError(msg, selector, line, column) {
+        function addError(msg, target, line, column) {
             entity.addError({
                 msg: msg,
                 tech: tech.name,
-                value: util.format('%s at line %s, column %s', selector, line, column)
+                value: util.format('%s at line %s, column %s', target, line, column)
             });
         }
 
-        data.nodes.forEach(function(rule) {
+        data && data.nodes.forEach(function(rule) {
             rule.type === 'rule' && parser(function(selectors) {
 
                 selectors.each(function(selector) {
