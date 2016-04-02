@@ -3,7 +3,7 @@ var bemNaming = require('bem-naming'),
     parser = require('postcss-selector-parser');
 
 module.exports = {
-    forEntityTech: function(tech, techConfig, entity) {
+    forEachTech: function(tech, entity, config) {
         var data = postcss.parse(tech.content);
 
         data.nodes.forEach(function(rule) {
@@ -36,4 +36,3 @@ module.exports = {
         });
     }
 };
-
