@@ -4,6 +4,15 @@ var bemNaming = require('bem-naming'),
     util = require('util');
 
 module.exports = {
+
+    configure: function() {
+        return {
+            techs: {
+                css: true
+            }
+        };
+    },
+
     forEachTech: function(tech, entity, config) {
         try {
             var data = postcss.parse(tech.content);
