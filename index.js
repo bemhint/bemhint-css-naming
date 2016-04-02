@@ -14,6 +14,45 @@ function buildExcludeRegexp(excludes) {
     return new RegExp(expr);
 }
 
+function isExcluded(excludes, css) {
+    return _.some(excludes, function(matcher) {
+        return minimatch(css, matcher);
+    });
+}
+
+function matchTest() {
+
+    var a = [],
+        date = Date.now(),
+        i,
+        regexp;
+
+    for (i = 0; i < 200; i++) {
+        a.push((date + i) + '');
+    }
+
+    console.log('генерация данных: ', Date.now() - date);
+    date = Date.now();
+
+    regexp = buildExcludeRegexp(a);
+
+    console.log('генерация regexp: ', Date.now() - date);
+    date = Date.now();
+
+    for(i = 0; i < 10000; i++) {
+        regexp.test('хрюката');
+    }
+
+    console.log('поиск regexp: ', Date.now() - date);
+    date = Date.now();
+
+    for(i = 0; i < 10000; i++) {
+        isExcluded(a, 'хрюката');
+    }
+
+    console.log('поиск minimatch: ', Date.now() - date)
+}
+
 
 module.exports = {
 
@@ -26,6 +65,8 @@ module.exports = {
     },
 
     forEachTech: function(tech, entity, config) {
+        matchTest();
+
         var data,
             excludes = config._config.excludeClasses || [],
             excludeRegexp = buildExcludeRegexp(excludes);
@@ -41,12 +82,6 @@ module.exports = {
                 msg: msg,
                 tech: tech.name,
                 value: util.format('%s at line %s, column %s', target, line, column)
-            });
-        }
-
-        function isExcluded(excludes, css) {
-            return _.some(excludes, function(matcher) {
-                return minimatch(css, matcher);
             });
         }
 
