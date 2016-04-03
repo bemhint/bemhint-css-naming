@@ -8,51 +8,11 @@ var bemNaming = require('bem-naming'),
 function buildExcludeRegexp(excludes) {
     // преобразуем паттерны в regex через mimimatch и склеиваем в один
     var expr = excludes.map(function(val) {
-        return '(' + minimatch.makeRe(val).source + ')'
+        return minimatch.makeRe(val).source;
     }).join('|');
 
     return new RegExp(expr);
 }
-
-function isExcluded(excludes, css) {
-    return _.some(excludes, function(matcher) {
-        return minimatch(css, matcher);
-    });
-}
-
-function matchTest() {
-
-    var a = [],
-        date = Date.now(),
-        i,
-        regexp;
-
-    for (i = 0; i < 200; i++) {
-        a.push((date + i) + '');
-    }
-
-    console.log('генерация данных: ', Date.now() - date);
-    date = Date.now();
-
-    regexp = buildExcludeRegexp(a);
-
-    console.log('генерация regexp: ', Date.now() - date);
-    date = Date.now();
-
-    for(i = 0; i < 10000; i++) {
-        regexp.test('хрюката');
-    }
-
-    console.log('поиск regexp: ', Date.now() - date);
-    date = Date.now();
-
-    for(i = 0; i < 10000; i++) {
-        isExcluded(a, 'хрюката');
-    }
-
-    console.log('поиск minimatch: ', Date.now() - date)
-}
-
 
 module.exports = {
 
@@ -65,14 +25,12 @@ module.exports = {
     },
 
     forEachTech: function(tech, entity, config) {
-        matchTest();
-
         var data,
-            excludes = config._config.excludeClasses || [],
-            excludeRegexp = buildExcludeRegexp(excludes);
+            excludes = config._config.excludeClasses,
+            excludeRegexp = excludes && buildExcludeRegexp(excludes);
 
         try {
-            var data = postcss.parse(tech.content);
+            data = postcss.parse(tech.content);
         } catch(e) {
             addError('Failed to check css naming', e.reason, e.line, e.column);
         }
@@ -98,9 +56,7 @@ module.exports = {
                             cssClassStart = cssClass.source.start,
                             errorLine = ruleStart.line + cssClassStart.line - 1;
 
-                        //if (excludeRegexp.test(cssVal)) {
-                        console.log(cssVal, isExcluded(excludes, cssVal), excludeRegexp.test(cssVal));
-                        if (isExcluded(excludes, cssVal)) {
+                        if (excludeRegexp && excludeRegexp.test(cssVal)) {
                             return;
                         }
 
