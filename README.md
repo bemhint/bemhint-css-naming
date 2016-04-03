@@ -1,8 +1,8 @@
 # bemhint-css-naming
 
 Plugin for [bemhint](https://github.com/bemhint/bemhint) which validate css classes.
-1. Checks css classes for BEM-notation;
-1. Checks for existing target block in the selector.
+  1. Checks css classes for BEM-notation;
+  1. Checks for existing target block in the selector.
 
 Example for `my-block.css` (exclude: `test-*`)
 
@@ -33,7 +33,7 @@ Example for `my-block.css` (exclude: `test-*`)
 
 /* not ok */
 
-/* invalid block name */
+/* invalid class name */
 .my-block__elem__elem2
 {
     color: black;
