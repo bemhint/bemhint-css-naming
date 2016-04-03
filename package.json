@@ -1,8 +1,14 @@
 {
   "name": "bemhint-css-naming",
   "version": "1.0.0",
-  "description": "",
+  "description": "Plugin for bemhint which validate css selectors",
   "main": "lib/index.js",
+  "keywords": [
+    "bemhint",
+    "plugin",
+    "css",
+    "naming"
+  ],
   "scripts": {
     "unit": "mocha test/"
   },
@@ -10,7 +16,6 @@
     "type": "git",
     "url": "git+https://github.com/bemhint/bemhint-css-naming.git"
   },
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bemhint/bemhint-css-naming/issues"
