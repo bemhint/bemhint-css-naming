@@ -1,10 +1,10 @@
 # bemhint-css-naming
 
-Плагин проверки именования css классов для [bemhint](https://github.com/bemhint/bemhint).
-  1. названия css классов соответствуют БЭМ-нотации;
-  1. в каждом селекторе присутствует класс текущего блока.
+Plugin for [bemhint](https://github.com/bemhint/bemhint) which validate css classes.
+1. Checks css classes for BEM-notation;
+1. Checks for existing target block in the selector.
 
-Пример для блока `my-block` (исключения: `test-*`):
+Example for `my-block.css` (exclude: `test-*`)
 
 ```css
 /* ok */
@@ -25,6 +25,7 @@
     color: red;
 }
 
+/* will be ignored because of exclude matching */
 .my-block .test-e_x_c_l_u_d_e_d
 {
     color: red;
@@ -38,7 +39,7 @@
     color: black;
 }
 
-/* there is no target block */
+/* there is no target block in selector */
 .another-block
 {
     color: green;
@@ -52,15 +53,16 @@
 
 ```
 
-## Установка
+## How to install
 
 ```bash
-$ npm install https://github.com/bemhint/bemhint-css-naming.git
+$ npm install bemhint-css-naming
 ```
 
-## Использование
+## How to use
 
-В конфигурационном файле `.bemhint.js` подключить плагин:
+Add plugin to `.bemhint.js`:
+
 ```js
 module.exports = {
     plugins: {
@@ -69,7 +71,7 @@ module.exports = {
 };
 ```
 
-Не проверять соответствие БЭМ-нотации заданные названия классов:
+Exclude some classnames from BEM-naming validation:
 
 ```js
 module.exports = {
