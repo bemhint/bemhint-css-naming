@@ -2,9 +2,9 @@
   "name": "bemhint-css-naming",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "unit": "mocha test/"
   },
   "repository": {
     "type": "git",
@@ -16,10 +16,15 @@
     "url": "https://github.com/bemhint/bemhint-css-naming/issues"
   },
   "homepage": "https://github.com/bemhint/bemhint-css-naming#readme",
-  "devDependencies": {
+  "dependencies": {
     "bem-naming": "^1.0.1",
     "minimatch": "^3.0.0",
     "postcss": "^5.0.19",
     "postcss-selector-parser": "^1.3.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
   }
 }
