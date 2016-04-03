@@ -1,6 +1,6 @@
 {
   "name": "bemhint-css-naming",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin for bemhint which validate css selectors",
   "main": "lib/index.js",
   "keywords": [
