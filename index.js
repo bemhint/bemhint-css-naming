@@ -1,18 +1,6 @@
-var bemNaming = require('bem-naming'),
-    postcss = require('postcss'),
-    parser = require('postcss-selector-parser'),
-    minimatch = require('minimatch'),
-    util = require('util'),
-    _ = require('lodash');
+var util = require('util'),
 
-function buildExcludeRegexp(excludes) {
-    // преобразуем паттерны в regex через mimimatch и склеиваем в один
-    var expr = excludes.map(function(val) {
-        return minimatch.makeRe(val).source;
-    }).join('|');
-
-    return new RegExp(expr);
-}
+    CssNaming = require('./css-naming');
 
 module.exports = {
 
@@ -25,16 +13,6 @@ module.exports = {
     },
 
     forEachTech: function(tech, entity, config) {
-        var data,
-            excludes = config._config.excludeClasses,
-            excludeRegexp = excludes && buildExcludeRegexp(excludes);
-
-        try {
-            data = postcss.parse(tech.content);
-        } catch(e) {
-            addError('Failed to check css naming', e.reason, e.line, e.column);
-        }
-
         function addError(msg, target, line, column) {
             entity.addError({
                 msg: msg,
@@ -43,39 +21,8 @@ module.exports = {
             });
         }
 
-        data && data.nodes.forEach(function(rule) {
-            rule.type === 'rule' && parser(function(selectors) {
+        var validator = new CssNaming(config._config.excludeClasses, addError);
 
-                selectors.each(function(selector) {
-                    var hasTargetBlock = false,
-                        ruleStart = rule.source.start;
-
-                    selector.eachClass(function (cssClass) {
-                        var cssVal = cssClass.value,
-                            cssEntity = bemNaming.parse(cssVal),
-                            cssClassStart = cssClass.source.start,
-                            errorLine = ruleStart.line + cssClassStart.line - 1;
-
-                        if (excludeRegexp && excludeRegexp.test(cssVal)) {
-                            return;
-                        }
-
-                        if (cssEntity) {
-                            hasTargetBlock = hasTargetBlock || (cssEntity.block === tech.entity.block);
-                        } else {
-                            addError('Invalid class naming', rule.selector, errorLine, cssClassStart.column);
-                        }
-                    });
-
-                    hasTargetBlock || addError(
-                        'Selector does not contain block name specified in the file name',
-                        rule.selector,
-                        ruleStart.line,
-                        ruleStart.column
-                    );
-
-                });
-            }).process(rule.selector);
-        });
+        validator.validateSelectors(tech.content, tech.entity.block);
     }
 };
