@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dima117/bemhint-css-naming.git"
+    "url": "git+https://github.com/bemhint/bemhint-css-naming.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dima117/bemhint-css-naming/issues"
+    "url": "https://github.com/bemhint/bemhint-css-naming/issues"
   },
-  "homepage": "https://github.com/dima117/bemhint-css-naming#readme",
+  "homepage": "https://github.com/bemhint/bemhint-css-naming#readme",
   "devDependencies": {
     "bem-naming": "^1.0.1",
     "minimatch": "^3.0.0",
