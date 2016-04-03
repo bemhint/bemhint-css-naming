@@ -19,7 +19,8 @@
 }
 
 .my-block .another-block > a:hover,
-.my-block .another-block__elem
+.my-block__elem,
+.my-block__elem_mod_val
 {
     color: red;
 }
