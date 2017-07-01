@@ -44,6 +44,15 @@ describe('css naming', function() {
             assert.called(errorCallback);
             assert.calledWith(errorCallback, sinon.match(/not contain block name/));
         });
+
+        it('should fail on tag selector without allowTag option', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming(null, errorCallback);
+
+            validator.validateSelectors('body {}', 'block');
+
+            assert.called(errorCallback);
+        });
     });
 
     describe('should pass', function() {
@@ -67,9 +76,36 @@ describe('css naming', function() {
 
         it('if wrong class was added to excludes', function() {
             var errorCallback = sinon.spy(),
-                validator = new CssNaming(['test-*'], errorCallback);
+                validator = new CssNaming({ excludes: ['test-*'] }, errorCallback);
 
             validator.validateSelectors('.block .test-e_x_c_l_u_d_e_d{}', 'block');
+
+            assert.notCalled(errorCallback);
+        });
+
+        it('should not fail on nested rule', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming(null, errorCallback);
+
+            validator.validateSelectors('.block &__elem {}', 'block');
+
+            assert.notCalled(errorCallback);
+        });
+
+        it('should not fail on pseudoclass', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming(null, errorCallback);
+
+            validator.validateSelectors(':root {}', 'block');
+
+            assert.notCalled(errorCallback);
+        });
+
+        it('should not fail on tag selector with allowTag option', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming({ allowTag: true }, errorCallback);
+
+            validator.validateSelectors('body {}', 'block');
 
             assert.notCalled(errorCallback);
         });
