@@ -45,11 +45,29 @@ describe('css naming', function() {
             assert.calledWith(errorCallback, sinon.match(/not contain block name/));
         });
 
-        it('should fail on tag selector without allowTag option', function() {
+        it('on tag selector without allowTags option', function() {
             var errorCallback = sinon.spy(),
                 validator = new CssNaming(null, errorCallback);
 
             validator.validateSelectors('body {}', 'block');
+
+            assert.called(errorCallback);
+        });
+
+        it('on combined tag selector with allowTags option', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming({ allowTags: true }, errorCallback);
+
+            validator.validateSelectors('body.neblock {}', 'block');
+
+            assert.called(errorCallback);
+        });
+
+        it('on combined tag selector', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming(null, errorCallback);
+
+            validator.validateSelectors('body.block {}', 'block');
 
             assert.called(errorCallback);
         });
@@ -83,7 +101,7 @@ describe('css naming', function() {
             assert.notCalled(errorCallback);
         });
 
-        it('should not fail on nested rule', function() {
+        it('on nested rule', function() {
             var errorCallback = sinon.spy(),
                 validator = new CssNaming(null, errorCallback);
 
@@ -92,7 +110,7 @@ describe('css naming', function() {
             assert.notCalled(errorCallback);
         });
 
-        it('should not fail on pseudoclass', function() {
+        it('on pseudoclass', function() {
             var errorCallback = sinon.spy(),
                 validator = new CssNaming(null, errorCallback);
 
@@ -101,9 +119,27 @@ describe('css naming', function() {
             assert.notCalled(errorCallback);
         });
 
-        it('should not fail on tag selector with allowTag option', function() {
+        it('on tag selector with allowTags option', function() {
             var errorCallback = sinon.spy(),
-                validator = new CssNaming({ allowTag: true }, errorCallback);
+                validator = new CssNaming({ allowTags: true }, errorCallback);
+
+            validator.validateSelectors('body {}', 'block');
+
+            assert.notCalled(errorCallback);
+        });
+
+        it('on combined selector with allowTags option', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming({ allowTags: true }, errorCallback);
+
+            validator.validateSelectors('body.block {}', 'block');
+
+            assert.notCalled(errorCallback);
+        });
+
+        it('on tag selector with allowTags option as an array', function() {
+            var errorCallback = sinon.spy(),
+                validator = new CssNaming({ allowTags: ['body', 'html'] }, errorCallback);
 
             validator.validateSelectors('body {}', 'block');
 
