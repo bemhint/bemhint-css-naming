@@ -85,3 +85,15 @@ module.exports = {
     }
 };
 ```
+
+Allow using tags or some set of tags with special option `allowTags`, which accepts array of tags or boolean value:
+
+```js
+module.exports = {
+    plugins: {
+        'bemhint-css-naming': {
+            allowTags: true // or ['body', 'html']
+        }
+    }
+};
+```

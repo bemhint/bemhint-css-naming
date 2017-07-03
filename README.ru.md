@@ -85,3 +85,15 @@ module.exports = {
     }
 };
 ```
+
+Разрешить использование тегов или определенного набор тегов специальной опцией `allowTags`, в которой допускается массив тегов или логическое значение.
+
+```js
+module.exports = {
+    plugins: {
+        'bemhint-css-naming': {
+            allowTags: true // or ['body', 'html']
+        }
+    }
+};
+```
